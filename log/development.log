@@ -262,3 +262,10 @@ Started GET "/static_pages/help" for ::1 at 2015-04-18 17:54:11 -0400
 Processing by StaticPagesController#help as HTML
   Rendered static_pages/help.html.erb within layouts/application (0.4ms)
 Completed 200 OK in 212ms (Views: 210.7ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/" for ::1 at 2015-04-18 19:26:23 -0400
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by StaticPagesController#home as HTML
+  Rendered static_pages/home.html.erb within layouts/application (15.9ms)
+Completed 200 OK in 311ms (Views: 263.3ms | ActiveRecord: 0.0ms)

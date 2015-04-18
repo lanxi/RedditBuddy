@@ -1,2 +1,11 @@
-<h1>StaticPages#help</h1>
-<p>Get help at the <a href="github.com/lanxi/RedditBuddy">github page</a> of this project.</p>
+<% provide(:title, "Help") %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= yield(:title) %> | Buddy Recommender</title>
+  </head>
+  <body>
+    <h1>Help</h1>
+    <p>Get help at the <a href="http://github.com/lanxi/RedditBuddy">github page</a> of this project.</p>
+  </body>
+</html>
