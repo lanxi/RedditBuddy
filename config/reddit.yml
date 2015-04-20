@@ -1,0 +1,7 @@
+development:
+  app_id: 3pGmz6A7lja7lw
+  secret: nFWGJ2jnxC68G-CbA8wFLP0zmEs
+
+production:
+  app_id: 3pGmz6A7lja7lw
+  secret: nFWGJ2jnxC68G-CbA8wFLP0zmEs

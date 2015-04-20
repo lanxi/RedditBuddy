@@ -1,3 +1,4 @@
 <% provide(:title, "Home") %>
+<div class="center jumbotron">
 <h1>Home</h1>
-<p>To find your Reddit friend recommendation, please log in.</p>
+<h2>To find your Reddit friend recommendation, please <%= link_to "Sign in with Reddit","/auth/reddit" %>.</h2>
