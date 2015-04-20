@@ -1,11 +1,3 @@
 <% provide(:title, "Home") %>
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= yield(:title) %> | Buddy Recommender</title>
-  </head>
-  <body>
-    <h1>Home</h1>
-    <p>To find your Reddit friend recommendation, please log in.</p>
-  </body>
-</html>
+<h1>Home</h1>
+<p>To find your Reddit friend recommendation, please log in.</p>
