@@ -4,6 +4,7 @@ def self.create_with_omniauth(auth)
     user.provider = auth["provider"]
     user.uid = auth["uid"]
     user.name = auth["info"]["name"]
+    user.oauth_token = response["access_token"]
   end
 end
 end

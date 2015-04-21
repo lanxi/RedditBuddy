@@ -4,9 +4,12 @@ Rails.application.routes.draw do
   get 'help' => 'static_pages#help'
   get 'about' => 'static_pages#about'
   resources :users
-
-  match "/auth/:provider/callback" => "sessions#create", :via => [:get]
-  match "/signout" => "sessions#destroy",:via => [:get] , :as => :signout
+  
+  get '/signin' => 'sessions#new', :as => :signin
+  match "/auth/:provider/callback" => "sessions#create", :via => [:get, :post]
+  match "/signout" => "sessions#destroy",:via => [:get, :post] , :as => :signout
+  match "/auth/failure" => "/", :via => [:get, :post]
+  match "/access" => "sessions#access", :via => [:get, :post], :as => :access
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

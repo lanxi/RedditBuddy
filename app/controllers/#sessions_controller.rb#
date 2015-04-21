@@ -12,7 +12,7 @@ def create
   session[:user_id] = @@user.id
   @@user.oauth_token = auth["code"]
   @@user.save!
-  raise request.env["omniauth.params"].to_yaml   
+  
   redirect_to root_url, :notice => "Signed in!"
 end
 
