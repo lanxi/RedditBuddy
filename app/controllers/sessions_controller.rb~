@@ -1,5 +1,7 @@
 class SessionsController < ApplicationController
-@@user = nil
+@@token  = ""
+@@currID = ""
+@@favRedditors = {}
 
 def new
   redirect_to '/auth/reddit'
@@ -7,29 +9,37 @@ end
 
 def create
   auth = request.env["omniauth.auth"]
-  incoming_url = request.referer
-  @@user = User.find_by_provider_and_uid(auth["provider"], auth["uid"]) || User.create_with_omniauth(auth)
-  session[:user_id] = @@user.id
-  @@user.oauth_token = auth["code"]
-  @@user.save!
-  puts incoming_url.inspect
+  
+  user = User.find_by_provider_and_uid(auth["provider"], auth["uid"]) || User.create_with_omniauth(auth)
+  session[:user_id] = user.id
+  user.oauth_token = auth["credentials"]["token"].to_str
+  #user.save!
+  
+  @@token = auth["credentials"]["token"].to_str
+  @@currID = user.name
   redirect_to root_url, :notice => "Signed in!"
 end
 
 def access
-  uri = URI.parse("https://ssl.reddit.com")
+  uri = URI.parse("https://oauth.reddit.com")
   http = Net::HTTP.new(uri.host, uri.port)
-  params = { :scope => 'identity,mysubreddits,history',
-             :client_id => RCONFIG['app_id'],
-             :redirect_uri => 'http://localhost:3000/auth/reddit/callback',
-             :code => @@user.oauth_token,
-             :grant_type => 'authorization_code'
-             }
-  request = Net::HTTP::Post.new("/api/v1/access_token")
-  request.set_form_data(params)
-  request.basic_auth(RCONFIG['app_id'],RCONFIG['secret'])
-  response = http.request(request)
-  redirect_to root_url, :notice => "access permitted"
+  http.use_ssl = true
+  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  headers = { "Authorization" => "bearer "+@@token }
+  liked = "/user/"+@@currID+"/liked"
+  
+  response, data = http.get2(liked,headers)
+  resp_body = JSON.parse(response.body)
+  resp_likes = resp_body["data"]["children"]
+  resp_likes.each do |x|
+    if @@favRedditors.has_key?(x["data"]["author"])
+	weight = @@favRedditors[x["data"]["author"]] + 1
+	@@favRedditors[x["data"]["author"]] = weight
+    else
+	@@favRedditors[x["data"]["author"]] = 1
+    end
+  end
+  raise resp_body["data"]["children"][0]["data"]["author"]  
 end
 
 def destroy
