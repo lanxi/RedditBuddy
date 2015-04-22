@@ -13,8 +13,7 @@ def create
   user = User.find_by_provider_and_uid(auth["provider"], auth["uid"]) || User.create_with_omniauth(auth)
   session[:user_id] = user.id
   user.oauth_token = auth["credentials"]["token"].to_str
-  #user.save!
-  
+  user.save!  
   @@token = auth["credentials"]["token"].to_str
   @@currID = user.name
   redirect_to root_url, :notice => "Signed in!"
@@ -39,7 +38,7 @@ def access
 	@@favRedditors[x["data"]["author"]] = 1
     end
   end
-  raise resp_body["data"]["children"][0]["data"]["author"]  
+  direct_to root_url  
 end
 
 def destroy

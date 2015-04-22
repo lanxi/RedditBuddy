@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150420210247) do
+ActiveRecord::Schema.define(version: 20150421195110) do
 
   create_table "users", force: :cascade do |t|
     t.string   "provider"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20150420210247) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.string   "oauth_token"
+    t.string   "fav_user"
+    t.string   "subreddits"
   end
 
 end

@@ -1,0 +1,12 @@
+class User < ActiveRecord::Base
+attr_accessible :provider, :uid, :name, :oauth_token, :fac_users
+def self.create_with_omniauth(auth)
+  create! do |user|
+    user.provider = auth["provider"]
+    user.uid = auth["uid"]
+    user.name = auth["info"]["name"]
+    user.oauth_token = response["access_token"]
+    user.fav_users = {}
+  end
+end
+end

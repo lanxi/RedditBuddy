@@ -38,7 +38,11 @@ def access
 	@@favRedditors[x["data"]["author"]] = 1
     end
   end
-  direct_to root_url  
+  fav_users = @@favRedditors.sort_by{|name, value| value}.reverse!
+  @names = ""
+  fav_users.each {|val| @names+=(val[0]+",")}
+  @names = @names[0..-2]
+  redirect_to help_path, :notice => "Got favs!"  
 end
 
 def destroy
