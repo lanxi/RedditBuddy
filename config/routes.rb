@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'static_pages#home'
   get 'static_pages/home'
   get 'help' => 'static_pages#help'
+  get 'match' => 'static_pages#match'
   get 'about' => 'static_pages#about'
   resources :users
   
@@ -10,6 +11,7 @@ Rails.application.routes.draw do
   match "/signout" => "sessions#destroy",:via => [:get, :post] , :as => :signout
   match "/auth/failure" => "/", :via => [:get, :post]
   match "/access" => "sessions#access", :via => [:get, :post], :as => :access
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

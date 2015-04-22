@@ -109,6 +109,8 @@ def access
 end
 
 def match
+  @match = ""
+  session[:match] = @match
   redirect_to match_path, :notice => "Got matches!" 
 end
 
