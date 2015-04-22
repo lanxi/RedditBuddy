@@ -2,6 +2,8 @@ class SessionsController < ApplicationController
 @@token  = ""
 @@currID = ""
 @@favRedditors = {}
+@@karma = {}
+@@favSubreddits = {}
 
 def new
   redirect_to '/auth/reddit'
@@ -20,11 +22,14 @@ def create
 end
 
 def access
+  # get fav users (sorted)
   uri = URI.parse("https://oauth.reddit.com")
   http = Net::HTTP.new(uri.host, uri.port)
   http.use_ssl = true
   http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   headers = { "Authorization" => "bearer "+@@token }
+
+  #/user/username/liked
   liked = "/user/"+@@currID+"/liked"
   
   response, data = http.get2(liked,headers)
@@ -32,17 +37,79 @@ def access
   resp_likes = resp_body["data"]["children"]
   resp_likes.each do |x|
     if @@favRedditors.has_key?(x["data"]["author"])
-	weight = @@favRedditors[x["data"]["author"]] + 1
-	@@favRedditors[x["data"]["author"]] = weight
+      weight = @@favRedditors[x["data"]["author"]] + 1
+      @@favRedditors[x["data"]["author"]] = weight
     else
-	@@favRedditors[x["data"]["author"]] = 1
+      @@favRedditors[x["data"]["author"]] = 1
     end
   end
   fav_users = @@favRedditors.sort_by{|name, value| value}.reverse!
   @names = ""
-  fav_users.each {|val| @names+=(val[0]+",")}
+  count = 0
+  fav_users.each {|val| 
+    if count < 10
+      @names+=(val[0]+",")
+      count += 1
+    end
+  }
   @names = @names[0..-2]
-  redirect_to help_path, :notice => "Got favs!"  
+
+  #/api/v1/me/karma 
+  karma = "/api/v1/me/karma"
+  response, data = http.get2(karma,headers)
+  resp_body = JSON.parse(response.body)
+  puts resp_body
+  resp_karma = resp_body["data"]
+  total_karma = 0
+  resp_karma.each do |x|
+    weight = x["comment_karma"].to_i + x["link_karma"].to_i
+    @@karma[x["sr"]] = weight
+    total_karma += weight
+  end
+  fav_karma = @@karma.sort_by{|name, value| value}.reverse!
+  @karma = fav_karma.to_s
+  #parse list of subreddit (<=top10) and access db to find most matched redditors 
+
+  #/user/username/submitted
+  submitted = "/user/"+@@currID+"/submitted"
+  response, data = http.get2(submitted,headers)
+  resp_body = JSON.parse(response.body)
+  #parse resp_body
+  resp_submitted = resp_body["data"]["children"]
+  resp_submitted.each do |x|
+    if @@favSubreddits.has_key?(x["data"]["subreddit"])
+      weight = @@favSubreddits[x["data"]["subreddit"]] + 1
+      @@favSubreddits[x["data"]["subreddit"]] = weight
+    else
+      @@favSubreddits[x["data"]["subreddit"]] = 1
+    end
+  end
+
+  #/user/username/comments
+  comments = "/user/"+@@currID+"/comments"
+  response, data = http.get2(comments,headers)
+  resp_body = JSON.parse(response.body)
+  #parse resp_body
+  resp_comments = resp_body["data"]["children"]
+  resp_comments.each do |x|
+    if @@favSubreddits.has_key?(x["data"]["subreddit"])
+      weight = @@favSubreddits[x["data"]["subreddit"]] + 1
+      @@favSubreddits[x["data"]["subreddit"]] = weight
+    else
+      @@favSubreddits[x["data"]["subreddit"]] = 1
+    end
+  end
+  fav_Subreddits = @@favSubreddits.sort_by{|name, value| value}.reverse!
+  @matches = fav_Subreddits.to_s
+
+  session[:matches] = @matches
+  session[:names] = @names
+  session[:karma] = @karma
+  redirect_to help_path, :notice => "Got favs!" 
+end
+
+def match
+  redirect_to match_path, :notice => "Got matches!" 
 end
 
 def destroy
