@@ -115,14 +115,21 @@ class SessionsController < ApplicationController
 
     fav_Subreddits.each do |name, score|
       subreddit = Subreddit.find_by_name(name)
-      redditors = Redditor.find_by_subreddit_id(subreddit)
-      raise redditors.to_s
-      redditors.each do |x|
-        if match_count.has_key?(x.name)
-          weight = match_count[x.name] + x.score
-          match_count[x.name] = weight
-        else
-          match_count[x.name] = x.score
+      usernames = subreddit.user.split(' ')
+      #puts usernames.to_s
+      count = 0
+      usernames.each do |username|
+        if count  < 10
+          redditor = Redditor.find_or_create_by(:name => username, :subreddit => name)
+          unless redditor.score.nil?
+            if match_count.has_key?(redditor.name)
+              weight = match_count[redditor.name] + redditor.score
+              match_count[redditor.name] = weight
+            else
+              match_count[redditor.name] = redditor.score
+            end
+            count += 1
+          end
         end
       end
     end
@@ -130,7 +137,7 @@ class SessionsController < ApplicationController
     match_count_sort = match_count.sort_by{|name, value| value}.reverse!
     count = 0
     @match = ""
-    match_count_sort each do |name, score|
+    match_count_sort.each do |name, score|
       if count < 20
         @match += (name+",")
         count += 1

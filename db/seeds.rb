@@ -5,9 +5,3 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-require 'CSV'
-
-CSV.foreach(Dir.getwd + "/lib/data/userscore.csv") do |row|
-	#@sub = Subreddit.find_by_name(row[1])
-    Subreddit.create(:name => row[0], :users => row[1])
-end
