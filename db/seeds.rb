@@ -8,6 +8,6 @@
 require 'CSV'
 
 CSV.foreach(Dir.getwd + "/lib/data/userscore.csv") do |row|
-	@sub = Subreddit.find_by_name(row[1])
-    Redditor.create(:name => row[0], :score => row[2], :subreddit_id => @sub)
+	#@sub = Subreddit.find_by_name(row[1])
+    Subreddit.create(:name => row[0], :users => row[1])
 end
