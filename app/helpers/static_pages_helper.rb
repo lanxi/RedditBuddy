@@ -9,6 +9,10 @@ module StaticPagesHelper
 	end
 
 	def find_matches
-		@find_matches ||= session[:matches] if session[:matches]
+		@find_matches ||= session[:subreddits] if session[:subreddits]
 	end
+
+	def find_matched
+		@find_matched ||= session[:match] if session[:match]
+	end	
 end

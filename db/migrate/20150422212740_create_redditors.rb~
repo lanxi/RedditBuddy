@@ -1,0 +1,11 @@
+class CreateRedditors < ActiveRecord::Migration
+  def change
+    create_table :redditors do |t|
+      t.string :name
+      t.integer :score
+      t.reference :subreddit
+
+      t.timestamps null: false
+    end
+  end
+end

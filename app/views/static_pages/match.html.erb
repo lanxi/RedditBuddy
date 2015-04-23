@@ -1,10 +1,12 @@
 <% provide(:title, "Match") %>
 <div class="center jumbotron">
-	<p>1</p>
+	
 <% if current_user %>
-<% if find_matches %>
-<p> my matches: </p>
-<%= @find_matches.inspect %>
+<p>1</p>
+<% if find_matched %>
+<p>2</p>
+<p> my friends: </p>
+<%= @find_matched.inspect %>
 <% end %>
 
 <% end %>

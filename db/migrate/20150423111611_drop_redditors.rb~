@@ -1,0 +1,4 @@
+class DropRedditors < ActiveRecord::Migration
+  def change
+  end
+end

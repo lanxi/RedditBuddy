@@ -9,7 +9,9 @@ gem 'sass-rails', '~> 5.0'
 
 #gem 'sqlite3'
 gem 'pg'
-gem 'taps'
+#gem 'taps'
+
+gem 'FasterCSV'
 
 gem 'bootstrap-sass', '~> 3.3.1'
 # Use Uglifier as compressor for JavaScript assets
